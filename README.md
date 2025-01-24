@@ -9,7 +9,7 @@ Can be useful for creating an intuitive experience in housing systems.
 
 ## Export (Client)
 
-```
+```lua
 --- Toggle the gizmo on the entity
 ---@param Entity number
 ---@return table
@@ -18,7 +18,7 @@ local data = exports.gs_gizmo:Toggle(Entity)
 
 Data is returned in the following format:
 
-```
+```lua
 {
     "coords": {
         "x": -233.07241821289063,
