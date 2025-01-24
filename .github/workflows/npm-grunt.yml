@@ -26,4 +26,4 @@ jobs:
       run: |
         cd web
         npm install
-        grunt
+        npm run build
