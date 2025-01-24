@@ -11,8 +11,8 @@ Can be useful for creating an intuitive experience in housing systems.
 
 ```lua
 --- Toggle the gizmo on the entity
----@param Entity number
----@return table
+--- @param Entity number
+--- @return table
 local data = exports.gs_gizmo:Toggle(Entity)
 ```
 
