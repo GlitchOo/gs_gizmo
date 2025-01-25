@@ -8,6 +8,7 @@ local minY
 local maxY
 local movementSpeed
 local stored
+local hookedFunc
 
 --- Initializes UI focus, camera, and other misc
 --- @param bool boolean
@@ -46,6 +47,7 @@ local function Init(bool)
         end
 
         stored = nil
+        hookedFunc = nil
         
         SendNUIMessage({
             action = 'SetupGizmo',
@@ -143,8 +145,9 @@ end
 --- Setup Gizmo
 --- @param entity number
 --- @param cfg table | nil
+--- @param allowPlace function | nil
 --- @return table | nil
-function ToggleGizmo(entity, cfg)
+function ToggleGizmo(entity, cfg, allowPlace)
     if not entity then return end
 
     if gizmoActive then
@@ -162,6 +165,8 @@ function ToggleGizmo(entity, cfg)
         coords = GetEntityCoords(entity),
         rotation = GetEntityRotation(entity)
     }
+
+    hookedFunc = allowPlace
 
     SendNUIMessage({
         action = 'SetupGizmo',
@@ -285,7 +290,7 @@ RegisterNUICallback('UpdateEntity', function(data, cb)
     local position = data.position
     local rotation = data.rotation
 
-    if #(vec3(position.x, position.y, position.z) - stored.coords) <= maxDistance then
+    if #(vec3(position.x, position.y, position.z) - stored.coords) <= maxDistance and (hookedFunc and hookedFunc(position)) then
         SetEntityCoordsNoOffset(entity, position.x, position.y, position.z)
         SetEntityRotation(entity, rotation.x, rotation.y, rotation.z)
         return cb({status = 'ok'})
@@ -337,5 +342,5 @@ AddEventHandler('onResourceStop', function(resource)
 end)
 
 --- Export ToggleGizmo function
---- @usage exports.gs_gizmo:Toggle(entity, {})
+--- @usage exports.gs_gizmo:Toggle(entity, {}, function(position) return true end)
 exports('Toggle', ToggleGizmo)

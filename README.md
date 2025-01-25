@@ -24,6 +24,7 @@ You can override the config via the export
 --- Toggle the gizmo on the entity
 --- @param Entity number
 --- @param Config table
+--- @param fn function | nil
 --- @return table
 local data = exports.gs_gizmo:Toggle(Entity, {
     EnableCam = true,
@@ -31,7 +32,13 @@ local data = exports.gs_gizmo:Toggle(Entity, {
     MinY = -40,
     MaxY = 40,
     MovementSpeed = 0.1
-})
+}, 
+function(pos)
+    -- You can hook in a function to block/allow gizmo movement
+    -- pos: vec3
+    -- return: boolean
+    return true
+end)
 ```
 
 Data is returned in the following format:
