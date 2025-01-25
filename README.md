@@ -21,6 +21,7 @@ You can override the config via the export
 ```lua
 --- Toggle the gizmo on the entity
 --- @param Entity number
+--- @param Config table
 --- @return table
 local data = exports.gs_gizmo:Toggle(Entity, {
     EnableCam = true,
