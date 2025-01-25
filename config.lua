@@ -14,6 +14,7 @@ Config = {
     Keybinds = {
         ToggleMode = 'R',                               -- Keybind to toggle rotate mode
         SnapToGround = 'G',                             -- Keybind to snap to ground
+        Cancel = 'X',                                   -- Keybind to cancel editing
         Finish = 'ENTER',                               -- Keybind to finish editing
     }
 }

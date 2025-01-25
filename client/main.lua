@@ -7,6 +7,7 @@ local maxDistance
 local minY
 local maxY
 local movementSpeed
+local stored
 
 --- Initializes UI focus, camera, and other misc
 --- @param bool boolean
@@ -43,6 +44,8 @@ local function Init(bool)
             DestroyCam(cam, true)
             cam = nil
         end
+
+        stored = nil
         
         SendNUIMessage({
             action = 'SetupGizmo',
@@ -155,12 +158,17 @@ function ToggleGizmo(entity, cfg)
     movementSpeed = (cfg?.MovementSpeed == nil and Config.MovementSpeed) or cfg.MovementSpeed
     mode = 'translate'
 
+    stored = {
+        coords = GetEntityCoords(entity),
+        rotation = GetEntityRotation(entity)
+    }
+
     SendNUIMessage({
         action = 'SetupGizmo',
         data = {
             handle = entity,
-            position = GetEntityCoords(entity),
-            rotation = GetEntityRotation(entity),
+            position = stored.coords,
+            rotation = stored.rotation,
             gizmoMode = mode
         }
     })
@@ -198,6 +206,7 @@ function ToggleGizmo(entity, cfg)
         local TranslatePrompt = PromptGroup:RegisterPrompt(_('rotate'), U.Keys[Config.Keybinds.ToggleMode], 1, 1, true, 'click', {tab = 0})
         local SnapToGroundPrompt = PromptGroup:RegisterPrompt(_('Snap To Ground'), U.Keys[Config.Keybinds.SnapToGround], 1, 1, true, 'click', {tab = 0})
         local DonePrompt = PromptGroup:RegisterPrompt(_('Done Editing'), U.Keys[Config.Keybinds.Finish], 1, 1, true, 'click', {tab = 0})
+        local CancelPrompt = PromptGroup:RegisterPrompt(_('Cancel'), U.Keys[Config.Keybinds.Cancel], 1, 1, true, 'click', {tab = 0})
         local LRPrompt = PromptGroup:RegisterPrompt(_('Move L/R'), U.Keys['A_D'], (cam and true or false), (cam and true or false), true, 'click', {tab = 0})
         local FBPrompt = PromptGroup:RegisterPrompt(_('Move F/B'), U.Keys['W_S'], (cam and true or false), (cam and true or false), true, 'click', {tab = 0})
         local UpPrompt = PromptGroup:RegisterPrompt(_('Move Up'), U.Keys['E'], (cam and true or false), (cam and true or false), true, 'click', {tab = 0})
@@ -238,6 +247,21 @@ function ToggleGizmo(entity, cfg)
                 })
 
                 Init(false)
+            end
+
+            if CancelPrompt:HasCompleted() then
+
+                responseData:resolve({
+                    entity = entity,
+                    coords = stored.coords,
+                    rotation = stored.rotation
+                })
+
+                SetEntityCoords(entity, stored.coords.x, stored.coords.y, stored.coords.z)
+                SetEntityRotation(entity, stored.rotation.x, stored.rotation.y, stored.rotation.z)
+
+                Init(false)
+
             end
         end
 
