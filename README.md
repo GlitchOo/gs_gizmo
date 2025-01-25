@@ -4,6 +4,7 @@ This is a simple gizmo for RedM similar to the gizmo in FxDK and FiveM.
 Can be useful for creating an intuitive experience in housing systems.
 
 [Example - Camera Mode Enabled](https://youtu.be/sywltl8HtcY)
+
 [Example - Camera Mode Disabled](https://youtu.be/bqQzilknLmI)
 
 ![Preview 1](https://i.gyazo.com/ba9aa91325101002b7be2b0d1eb3cc45.jpg)
