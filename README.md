@@ -9,7 +9,7 @@ Can be useful for creating an intuitive experience in housing systems.
 
 [Example - Camera Mode Disabled](https://youtu.be/bqQzilknLmI)
 
-![Preview 1](https://i.gyazo.com/ba9aa91325101002b7be2b0d1eb3cc45.jpg)
+![Preview 1](https://i.gyazo.com/fd89f9a9018aa44f640db5d22787b9a7.jpg)
 
 ## Export (Client)
 
