@@ -257,7 +257,7 @@ function ToggleGizmo(entity, cfg)
                     rotation = stored.rotation
                 })
 
-                SetEntityCoords(entity, stored.coords.x, stored.coords.y, stored.coords.z)
+                SetEntityCoordsNoOffset(entity, stored.coords.x, stored.coords.y, stored.coords.z)
                 SetEntityRotation(entity, stored.rotation.x, stored.rotation.y, stored.rotation.z)
 
                 Init(false)
@@ -286,7 +286,7 @@ RegisterNUICallback('UpdateEntity', function(data, cb)
     local rotation = data.rotation
 
     if #(vec3(position.x, position.y, position.z) - stored.coords) <= maxDistance then
-        SetEntityCoords(entity, position.x, position.y, position.z)
+        SetEntityCoordsNoOffset(entity, position.x, position.y, position.z)
         SetEntityRotation(entity, rotation.x, rotation.y, rotation.z)
         return cb({status = 'ok'})
     end
