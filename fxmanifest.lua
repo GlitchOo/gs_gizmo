@@ -5,7 +5,7 @@ lua54 "yes"
 
 author '_G[S]cripts'
 description 'Gizmo for RedM'
-version '1.0.1'
+version '1.0.2'
 
 shared_script 'config.lua'
 
