@@ -1,5 +1,7 @@
 # GS_GIZMO
 
+[Main](https://github.com/GlitchOo/gs_gizmo/actions/workflows/main.yml/badge.svg)
+
 This is a simple gizmo for RedM similar to the gizmo in FxDK and FiveM.
 Can be useful for creating an intuitive experience in housing systems.
 
