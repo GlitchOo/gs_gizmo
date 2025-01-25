@@ -15,7 +15,7 @@ Can be useful for creating an intuitive experience in housing systems.
 
 You can override the config via the export
 - EnableCam: Enable/Disable camera mode
-- MaxDistance: Override the MaxDistance (Camera Mode)
+- MaxDistance: Override the MaxDistance
 - MinY: Override the MinY (Camera Mode)
 - MaxY: Override the MaxY (Camera Mode)
 - MovementSpeed: Override movement speed (Camera Mode)

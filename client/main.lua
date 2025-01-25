@@ -285,9 +285,20 @@ RegisterNUICallback('UpdateEntity', function(data, cb)
     local position = data.position
     local rotation = data.rotation
 
-    SetEntityCoords(entity, position.x, position.y, position.z)
-    SetEntityRotation(entity, rotation.x, rotation.y, rotation.z)
-    cb('ok')
+    if #(vec3(position.x, position.y, position.z) - stored.coords) <= maxDistance then
+        SetEntityCoords(entity, position.x, position.y, position.z)
+        SetEntityRotation(entity, rotation.x, rotation.y, rotation.z)
+        return cb({status = 'ok'})
+    end
+
+    position = GetEntityCoords(entity)
+    rotation = GetEntityRotation(entity)
+
+    cb({
+        status = 'Distance is too far',
+        position = {x = position.x, y = position.y, z = position.z},
+        rotation = {x = rotation.x, y = rotation.y, z = rotation.z}
+    })
 end)
 
 --- If DevMode is enabled, register a command to spawn a crate for testing
