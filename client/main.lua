@@ -8,6 +8,8 @@ local minY
 local maxY
 local movementSpeed
 
+--- Initializes UI focus, camera, and other misc
+--- @param bool boolean
 local function Init(bool)
     local ped = PlayerPedId()
     if bool then
@@ -53,22 +55,27 @@ local function Init(bool)
     gizmoActive = bool
 end
 
+--- Disables controls, Radar, and Player Firing
 function DisableControlsAndUI()
     DisableControlAction(0, 0x07CE1E61, true)
     HideHudAndRadarThisFrame()
     DisablePlayerFiring(U.Cache.PlayerId, true)
 end
 
+--- Get the normal value of a control(s) used for movement & rotation
+--- @param control number | table
+--- @return number
 local function GetSmartControlNormal(control)
     if type(control) == 'table' then
-    local normal1 = GetDisabledControlNormal(0, control[1])
-    local normal2 = GetDisabledControlNormal(0, control[2])
-    return normal1 - normal2
+        local normal1 = GetDisabledControlNormal(0, control[1])
+        local normal2 = GetDisabledControlNormal(0, control[2])
+        return normal1 - normal2
     end
 
     return GetDisabledControlNormal(0, control)
 end
 
+--- Handle camera rotations
 local function Rotations()
     local newX
     local rAxisX = GetControlNormal(0, 0xA987235F)
@@ -89,6 +96,7 @@ local function Rotations()
     end
 end
 
+--- Handle camera movement
 local function Movement()
     local x, y, z = table.unpack(GetCamCoord(cam))
     local rot = GetCamRot(cam, 2)
@@ -123,11 +131,16 @@ local function Movement()
     end
 end
 
+--- Hanndle camera controls (movement & rotation)
 local function CamControls()
     Rotations()
     Movement()
 end
 
+--- Setup Gizmo
+--- @param entity number
+--- @param cfg table | nil
+--- @return table | nil
 function ToggleGizmo(entity, cfg)
     if not entity then return end
 
@@ -240,6 +253,9 @@ function ToggleGizmo(entity, cfg)
     return Citizen.Await(responseData)
 end
 
+--- Register NUI Callback for updating entity position and rotation
+--- @param data table
+--- @param cb function
 RegisterNUICallback('UpdateEntity', function(data, cb)
     local entity = data.handle
     local position = data.position
@@ -250,6 +266,7 @@ RegisterNUICallback('UpdateEntity', function(data, cb)
     cb('ok')
 end)
 
+--- If DevMode is enabled, register a command to spawn a crate for testing
 if Config.DevMode then
 RegisterCommand('gizmo', function()
     RequestModel('p_crate14x')
@@ -284,4 +301,6 @@ AddEventHandler('onResourceStop', function(resource)
     end
 end)
 
+--- Export ToggleGizmo function
+--- @usage exports.gs_gizmo:Toggle(entity, {})
 exports('Toggle', ToggleGizmo)
