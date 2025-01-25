@@ -11,11 +11,24 @@ Can be useful for creating an intuitive experience in housing systems.
 
 ## Export (Client)
 
+You can override the config via the export
+- EnableCam: Enable/Disable camera mode
+- MaxDistance: Override the MaxDistance (Camera Mode)
+- MinY: Override the MinY (Camera Mode)
+- MaxY: Override the MaxY (Camera Mode)
+- MovementSpeed: Override movement speed (Camera Mode)
+
 ```lua
 --- Toggle the gizmo on the entity
 --- @param Entity number
 --- @return table
-local data = exports.gs_gizmo:Toggle(Entity)
+local data = exports.gs_gizmo:Toggle(Entity, {
+    EnableCam = true,
+    MaxDistance = 100,
+    MinY = -40,
+    MaxY = 40,
+    MovementSpeed = 0.1
+})
 ```
 
 Data is returned in the following format:

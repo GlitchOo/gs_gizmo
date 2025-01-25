@@ -1,6 +1,12 @@
-local gizmoActive, Cam = false, nil
+local gizmoActive = false
 local responseData = nil
 local mode = 'translate'
+local cam = nil
+local enableCam
+local maxDistance
+local minY
+local maxY
+local movementSpeed
 
 local function Init(bool)
     local ped = PlayerPedId()
@@ -8,16 +14,16 @@ local function Init(bool)
         SetNuiFocus(true, true)
         SetNuiFocusKeepInput(true)
 
-        if Config.EnableCam then
+        if enableCam then
             local coords = GetGameplayCamCoord()
             local rot = GetGameplayCamRot(2)
             local fov = GetGameplayCamFov()
 
-            Cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
+            cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
 
-            SetCamCoord(Cam, coords.x, coords.y, coords.z + 0.5)
-            SetCamRot(Cam, rot.x, rot.y, rot.z, 2)
-            SetCamFov(Cam, fov)
+            SetCamCoord(cam, coords.x, coords.y, coords.z + 0.5)
+            SetCamRot(cam, rot.x, rot.y, rot.z, 2)
+            SetCamFov(cam, fov)
             RenderScriptCams(true, true, 500, true, true)
             FreezeEntityPosition(ped, true)
         end
@@ -28,12 +34,12 @@ local function Init(bool)
         SetNuiFocusKeepInput(IsNuiFocusKeepingInput())
         FreezeEntityPosition(ped, false)
 
-        if Cam then
+        if cam then
             RenderScriptCams(false, true, 500, true, true)
-            SetCamActive(Cam, false)
-            DetachCam(Cam)
-            DestroyCam(Cam, true)
-            Cam = nil
+            SetCamActive(cam, false)
+            DetachCam(cam)
+            DestroyCam(cam, true)
+            cam = nil
         end
         
         SendNUIMessage({
@@ -68,31 +74,31 @@ local function Rotations()
     local rAxisX = GetControlNormal(0, 0xA987235F)
     local rAxisY = GetControlNormal(0, 0xD2047988)
 
-    local rot = GetCamRot(Cam, 2)
+    local rot = GetCamRot(cam, 2)
     
     local yValue = rAxisY * 5
     local newZ = rot.z + (rAxisX * -10)
     local newXval = rot.x - yValue
 
-    if (newXval >= Config.MinY) and (newXval <= Config.MaxY) then
+    if (newXval >= minY) and (newXval <= maxY) then
         newX = newXval
     end
 
     if newX and newZ then
-        SetCamRot(Cam, vector3(newX, rot.y, newZ), 2)
+        SetCamRot(cam, vector3(newX, rot.y, newZ), 2)
     end
 end
 
 local function Movement()
-    local x, y, z = table.unpack(GetCamCoord(Cam))
-    local rot = GetCamRot(Cam, 2)
+    local x, y, z = table.unpack(GetCamCoord(cam))
+    local rot = GetCamRot(cam, 2)
 
-    local dx = math.sin(-rot.z * math.pi / 180) * Config.MovementSpeed
-    local dy = math.cos(-rot.z * math.pi / 180) * Config.MovementSpeed
-    local dz = math.tan(rot.x * math.pi / 180) * Config.MovementSpeed
+    local dx = math.sin(-rot.z * math.pi / 180) * movementSpeed
+    local dy = math.cos(-rot.z * math.pi / 180) * movementSpeed
+    local dz = math.tan(rot.x * math.pi / 180) * movementSpeed
 
-    local dx2 = math.sin(math.floor(rot.z + 90.0) % 360 * -1.0 * math.pi / 180) * Config.MovementSpeed
-    local dy2 = math.cos(math.floor(rot.z + 90.0) % 360 * -1.0 * math.pi / 180) * Config.MovementSpeed
+    local dx2 = math.sin(math.floor(rot.z + 90.0) % 360 * -1.0 * math.pi / 180) * movementSpeed
+    local dy2 = math.cos(math.floor(rot.z + 90.0) % 360 * -1.0 * math.pi / 180) * movementSpeed
 
     local moveX = GetSmartControlNormal(U.Keys['A_D']) -- Left & Right
     local moveY = GetSmartControlNormal(U.Keys['W_S']) -- Forward & Backward
@@ -112,8 +118,8 @@ local function Movement()
         z = z + dz * moveZ
     end
 
-    if #(GetEntityCoords(PlayerPedId()) - vector3(x, y, z)) <= Config.MaxDistance then
-        SetCamCoord(Cam, x, y, z)
+    if #(GetEntityCoords(PlayerPedId()) - vector3(x, y, z)) <= maxDistance then
+        SetCamCoord(cam, x, y, z)
     end
 end
 
@@ -122,13 +128,18 @@ local function CamControls()
     Movement()
 end
 
-function ToggleGizmo(entity)
+function ToggleGizmo(entity, cfg)
     if not entity then return end
 
     if gizmoActive then
         Init(false)
     end
 
+    enableCam = (cfg?.EnableCam == nil and Config.EnableCam) or cfg.EnableCam
+    maxDistance = (cfg?.MaxDistance == nil and Config.MaxDistance) or cfg.MaxDistance
+    minY = (cfg?.MinY == nil and Config.MinY) or cfg.MinY
+    maxY = (cfg?.MaxY == nil and Config.MaxY) or cfg.MaxY
+    movementSpeed = (cfg?.MovementSpeed == nil and Config.MovementSpeed) or cfg.MovementSpeed
     mode = 'translate'
 
     SendNUIMessage({
@@ -163,7 +174,7 @@ function ToggleGizmo(entity)
             Wait(0)
             DisableControlsAndUI()
 
-            if Cam then
+            if cam then
                 CamControls()
             end
         end
@@ -174,10 +185,10 @@ function ToggleGizmo(entity)
         local TranslatePrompt = PromptGroup:RegisterPrompt(_('rotate'), U.Keys[Config.Keybinds.ToggleMode], 1, 1, true, 'click', {tab = 0})
         local SnapToGroundPrompt = PromptGroup:RegisterPrompt(_('Snap To Ground'), U.Keys[Config.Keybinds.SnapToGround], 1, 1, true, 'click', {tab = 0})
         local DonePrompt = PromptGroup:RegisterPrompt(_('Done Editing'), U.Keys[Config.Keybinds.Finish], 1, 1, true, 'click', {tab = 0})
-        local LRPrompt = PromptGroup:RegisterPrompt(_('Move L/R'), U.Keys['A_D'], (Cam and true or false), (Cam and true or false), true, 'click', {tab = 0})
-        local FBPrompt = PromptGroup:RegisterPrompt(_('Move F/B'), U.Keys['W_S'], (Cam and true or false), (Cam and true or false), true, 'click', {tab = 0})
-        local UpPrompt = PromptGroup:RegisterPrompt(_('Move Up'), U.Keys['E'], (Cam and true or false), (Cam and true or false), true, 'click', {tab = 0})
-        local DownPrompt = PromptGroup:RegisterPrompt(_('Move Down'), U.Keys['Q'], (Cam and true or false), (Cam and true or false), true, 'click', {tab = 0})
+        local LRPrompt = PromptGroup:RegisterPrompt(_('Move L/R'), U.Keys['A_D'], (cam and true or false), (cam and true or false), true, 'click', {tab = 0})
+        local FBPrompt = PromptGroup:RegisterPrompt(_('Move F/B'), U.Keys['W_S'], (cam and true or false), (cam and true or false), true, 'click', {tab = 0})
+        local UpPrompt = PromptGroup:RegisterPrompt(_('Move Up'), U.Keys['E'], (cam and true or false), (cam and true or false), true, 'click', {tab = 0})
+        local DownPrompt = PromptGroup:RegisterPrompt(_('Move Down'), U.Keys['Q'], (cam and true or false), (cam and true or false), true, 'click', {tab = 0})
 
         while gizmoActive do
             Wait(5)
