@@ -290,7 +290,7 @@ RegisterNUICallback('UpdateEntity', function(data, cb)
     local position = data.position
     local rotation = data.rotation
 
-    if #(vec3(position.x, position.y, position.z) - stored.coords) <= maxDistance and (hookedFunc and hookedFunc(position)) then
+    if #(vec3(position.x, position.y, position.z) - stored.coords) <= maxDistance and (not hookedFunc or hookedFunc(position)) then
         SetEntityCoordsNoOffset(entity, position.x, position.y, position.z)
         SetEntityRotation(entity, rotation.x, rotation.y, rotation.z)
         return cb({status = 'ok'})
