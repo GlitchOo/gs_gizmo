@@ -1,10 +1,10 @@
 import React from "react";
-import { ThreeComp } from "./components/Three";
+import { Gizmo } from "./components/Gizmo";
 
 function App() {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-        <ThreeComp />
+        <Gizmo />
     </div>
   );
 }

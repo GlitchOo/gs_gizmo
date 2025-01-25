@@ -1,14 +1,11 @@
 import { PerspectiveCamera } from '@react-three/drei'
 import { useNuiEvent } from '../hooks/useNuiEvent'
+import { zRot } from '../utils/misc'
 import { useThree } from '@react-three/fiber'
 import { MathUtils } from 'three'
 
-export const CameraComp = () => {
+export const Camera = () => {
     const { camera } = useThree()
-
-    const zRotationHandler = (t: number,e: number) => {
-        return t > 0 && t < 90 ? e : (t > -180 && t < -90) || t > 0 ? -e : e
-    }
 
     useNuiEvent('SetCameraPosition', ({ position, rotation }: any) => {
         camera.position.set( position.x, position.z, -position.y )
@@ -16,7 +13,7 @@ export const CameraComp = () => {
 
         rotation && camera.rotation.set(
             MathUtils.degToRad(rotation.x),
-            MathUtils.degToRad(zRotationHandler(rotation.x, rotation.z)),
+            MathUtils.degToRad(zRot(rotation.x, rotation.z)),
             MathUtils.degToRad(rotation.y)
         )
 

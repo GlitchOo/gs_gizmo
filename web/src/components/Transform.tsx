@@ -3,7 +3,7 @@ import { TransformControls } from '@react-three/drei';
 import { useNuiEvent, fetchNui } from '../hooks/useNuiEvent';
 import { Mesh, MathUtils } from 'three';
 
-export const TransformComp = () => {
+export const Transform = () => {
   const mesh = useRef<Mesh>(null!);
   const [currentEntity, setCurrentEntity] = useState<number>();
   const [editorMode, setEditorMode] = useState<"translate" | "rotate">("translate");
