@@ -8,19 +8,21 @@ local function Init(bool)
         SetNuiFocus(true, true)
         SetNuiFocusKeepInput(true)
 
-        local coords = GetGameplayCamCoord()
-        local rot = GetGameplayCamRot(2)
-        local fov = GetGameplayCamFov()
+        if Config.EnableCam then
+            local coords = GetGameplayCamCoord()
+            local rot = GetGameplayCamRot(2)
+            local fov = GetGameplayCamFov()
 
-        Cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
+            Cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", true)
 
-        SetCamCoord(Cam, coords.x, coords.y, coords.z + 0.5)
-        SetCamRot(Cam, rot.x, rot.y, rot.z, 2)
-        SetCamFov(Cam, fov)
-        RenderScriptCams(true, true, 500, true, true)
+            SetCamCoord(Cam, coords.x, coords.y, coords.z + 0.5)
+            SetCamRot(Cam, rot.x, rot.y, rot.z, 2)
+            SetCamFov(Cam, fov)
+            RenderScriptCams(true, true, 500, true, true)
+            FreezeEntityPosition(ped, true)
+        end
         
         SetCurrentPedWeapon(ped, GetHashKey('WEAPON_UNARMED'), true)
-        FreezeEntityPosition(ped, true)
     else
         SetNuiFocus(false, false)
         SetNuiFocusKeepInput(IsNuiFocusKeepingInput())
@@ -160,7 +162,10 @@ function ToggleGizmo(entity)
         while gizmoActive do
             Wait(0)
             DisableControlsAndUI()
-            CamControls()
+
+            if Cam then
+                CamControls()
+            end
         end
     end)
 
@@ -169,10 +174,10 @@ function ToggleGizmo(entity)
         local TranslatePrompt = PromptGroup:RegisterPrompt(_('rotate'), U.Keys[Config.Keybinds.ToggleMode], 1, 1, true, 'click', {tab = 0})
         local SnapToGroundPrompt = PromptGroup:RegisterPrompt(_('Snap To Ground'), U.Keys[Config.Keybinds.SnapToGround], 1, 1, true, 'click', {tab = 0})
         local DonePrompt = PromptGroup:RegisterPrompt(_('Done Editing'), U.Keys[Config.Keybinds.Finish], 1, 1, true, 'click', {tab = 0})
-        local LRPrompt = PromptGroup:RegisterPrompt(_('Move L/R'), U.Keys['A_D'], 1, 1, true, 'click', {tab = 0})
-        local FBPrompt = PromptGroup:RegisterPrompt(_('Move F/B'), U.Keys['W_S'], 1, 1, true, 'click', {tab = 0})
-        local UpPrompt = PromptGroup:RegisterPrompt(_('Move Up'), U.Keys['E'], 1, 1, true, 'click', {tab = 0})
-        local DownPrompt = PromptGroup:RegisterPrompt(_('Move Down'), U.Keys['Q'], 1, 1, true, 'click', {tab = 0})
+        local LRPrompt = PromptGroup:RegisterPrompt(_('Move L/R'), U.Keys['A_D'], (Cam and true or false), (Cam and true or false), true, 'click', {tab = 0})
+        local FBPrompt = PromptGroup:RegisterPrompt(_('Move F/B'), U.Keys['W_S'], (Cam and true or false), (Cam and true or false), true, 'click', {tab = 0})
+        local UpPrompt = PromptGroup:RegisterPrompt(_('Move Up'), U.Keys['E'], (Cam and true or false), (Cam and true or false), true, 'click', {tab = 0})
+        local DownPrompt = PromptGroup:RegisterPrompt(_('Move Down'), U.Keys['Q'], (Cam and true or false), (Cam and true or false), true, 'click', {tab = 0})
 
         while gizmoActive do
             Wait(5)

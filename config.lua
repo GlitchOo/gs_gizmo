@@ -1,8 +1,9 @@
 Config = {
-    DevMode = true,                                    -- Enable/Disable Dev Mode
+    DevMode = true,                                     -- Enable/Disable Dev Mode
 
     Locale = 'en',                                      -- Locale to use
 
+    EnableCam = true,                                   -- Enable/Disable camera feature
     MaxDistance = 100,                                  -- Max disatnce from player ped to camera
     MinY = -40,                                         -- Min Y value from starting position for camera
     MaxY = 40,                                          -- Max Y value starting position for camera
