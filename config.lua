@@ -1,5 +1,5 @@
 Config = {
-    DevMode = true,                                     -- Enable/Disable Dev Mode
+    DevMode = false,                                    -- Enable/Disable Dev Mode
 
     Locale = 'en',                                      -- Locale to use
 
