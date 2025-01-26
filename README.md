@@ -63,14 +63,16 @@ Data is returned in the following format:
 
 Building the UI is reletively easy. Just make sure you have Node 18.x or higher installed and pnpm
 
-- Navigate to the ./web directory and execute the following commands
+Navigate to the ./web directory and execute the following commands
 
 ## pnpm
 pnpm i
+
 pnpm run build
 
 ## npm
 npm i
+
 npm run build
 
 
