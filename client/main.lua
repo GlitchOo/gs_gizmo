@@ -10,6 +10,16 @@ local movementSpeed
 local stored
 local hookedFunc
 
+--- Export Handler
+--- @param resourceName string
+--- @param exportName string
+--- @param fn function
+local function ExportHandler(resourceName, exportName, fn)
+    AddEventHandler(('__cfx_export_%s_%s'):format(resourceName, exportName), function(cb)
+        cb(fn)
+    end)
+end
+
 --- Initializes UI focus, camera, and other misc
 --- @param bool boolean
 local function Init(bool)
@@ -344,3 +354,6 @@ end)
 --- Export ToggleGizmo function
 --- @usage exports.gs_gizmo:Toggle(entity, {}, function(position) return true end)
 exports('Toggle', ToggleGizmo)
+
+--- Export Handler for https://github.com/outsider31000/object_gizmo/tree/main
+ExportHandler('object_gizmo', 'useGizmo', ToggleGizmo)

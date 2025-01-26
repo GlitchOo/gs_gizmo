@@ -5,7 +5,7 @@ lua54 "yes"
 
 author '_G[S]cripts'
 description 'Gizmo for RedM'
-version '1.0.2'
+version '1.0.3'
 
 shared_script 'config.lua'
 
@@ -21,3 +21,6 @@ files {
 	'web/dist/index.html',
 	'web/dist/**/*',
 }
+
+-- Provide 'object_gizmo' exports
+provide 'object_gizmo'
