@@ -4,6 +4,7 @@ local mode = 'translate'
 local cam = nil
 local enableCam
 local maxDistance
+local maxCamDistance
 local minY
 local maxY
 local movementSpeed
@@ -141,7 +142,7 @@ local function Movement()
         z = z + dz * moveZ
     end
 
-    if #(GetEntityCoords(PlayerPedId()) - vector3(x, y, z)) <= maxDistance then
+    if #(GetEntityCoords(PlayerPedId()) - vec3(x, y, z)) <= maxCamDistance and (not hookedFunc or hookedFunc(vec3(x, y, z))) then
         SetCamCoord(cam, x, y, z)
     end
 end
@@ -166,6 +167,7 @@ function ToggleGizmo(entity, cfg, allowPlace)
 
     enableCam = (cfg?.EnableCam == nil and Config.EnableCam) or cfg.EnableCam
     maxDistance = (cfg?.MaxDistance == nil and Config.MaxDistance) or cfg.MaxDistance
+    maxCamDistance = (cfg?.MaxCamDistance == nil and Config.MaxCamDistance) or cfg.MaxCamDistance
     minY = (cfg?.MinY == nil and Config.MinY) or cfg.MinY
     maxY = (cfg?.MaxY == nil and Config.MaxY) or cfg.MaxY
     movementSpeed = (cfg?.MovementSpeed == nil and Config.MovementSpeed) or cfg.MovementSpeed
@@ -302,7 +304,7 @@ RegisterNUICallback('UpdateEntity', function(data, cb)
     local position = data.position
     local rotation = data.rotation
 
-    if #(vec3(position.x, position.y, position.z) - stored.coords) <= maxDistance and (not hookedFunc or hookedFunc(position)) then
+    if (maxDistance and #(vec3(position.x, position.y, position.z) - stored.coords) <= maxDistance) and (not hookedFunc or hookedFunc(position)) then
         SetEntityCoordsNoOffset(entity, position.x, position.y, position.z)
         SetEntityRotation(entity, rotation.x, rotation.y, rotation.z)
         return cb({status = 'ok'})

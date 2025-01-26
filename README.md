@@ -15,7 +15,8 @@ Can be useful for creating an intuitive experience in housing systems.
 
 You can override the config via the export
 - EnableCam: Enable/Disable camera mode
-- MaxDistance: Override the MaxDistance
+- MaxDistance: Override the MaxDistance for the gizmo (set to false for no limit)
+- MaxCamDistance:  Override the MaxCamDistance for "camera mode"
 - MinY: Override the MinY (Camera Mode)
 - MaxY: Override the MaxY (Camera Mode)
 - MovementSpeed: Override movement speed (Camera Mode)
@@ -29,12 +30,13 @@ You can override the config via the export
 local data = exports.gs_gizmo:Toggle(Entity, {
     EnableCam = true,
     MaxDistance = 100,
+    MaxCamDistance = 60,
     MinY = -40,
     MaxY = 40,
     MovementSpeed = 0.1
 }, 
 function(pos)
-    -- You can hook in a function to block/allow gizmo movement
+    -- You can hook in a function to block/allow gizmo and camera movement
     -- pos: vec3
     -- return: boolean
     return true
