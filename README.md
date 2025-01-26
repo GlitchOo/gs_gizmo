@@ -58,3 +58,6 @@ Data is returned in the following format:
     "entity": 969988
 }
 ```
+
+# Credits
+[DemiAutomatic](https://github.com/DemiAutomatic)

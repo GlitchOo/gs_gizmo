@@ -254,11 +254,11 @@ function ToggleGizmo(entity, cfg, allowPlace)
             end
 
             if DonePrompt:HasCompleted() then
-
+                local coords = GetEntityCoords(entity)
                 responseData:resolve({
                     entity = entity,
-                    coords = GetEntityCoords(entity),
-                    position = GetEntityCoords(entity), -- Alias
+                    coords = coords,
+                    position = coords, -- Alias
                     rotation = GetEntityRotation(entity)
                 })
 
