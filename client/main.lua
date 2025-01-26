@@ -258,7 +258,7 @@ function ToggleGizmo(entity, cfg, allowPlace)
                 responseData:resolve({
                     entity = entity,
                     coords = GetEntityCoords(entity),
-                    position = stored.coords, -- Alias
+                    position = GetEntityCoords(entity), -- Alias
                     rotation = GetEntityRotation(entity)
                 })
 
