@@ -270,6 +270,7 @@ function ToggleGizmo(entity, cfg, allowPlace)
             if CancelPrompt:HasCompleted() then
 
                 responseData:resolve({
+                    canceled = true,
                     entity = entity,
                     coords = stored.coords,
                     position = stored.coords, -- Alias
